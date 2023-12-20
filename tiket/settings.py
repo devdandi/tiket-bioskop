@@ -142,4 +142,4 @@ STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
 
 MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8080','https://943f-114-142-172-42.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8080','https://6de1-116-206-14-47.ngrok-free.app']

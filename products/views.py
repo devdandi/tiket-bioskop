@@ -5,6 +5,12 @@ from django.core.paginator import Paginator
 # Create your views here.
 def index(request):
     film_list = Films.objects.all()
+
+    q = request.GET.get('q')
+    
+    if q:
+        film_list = film_list.filter(name__icontains=q)
+    
     paginator = Paginator(film_list, 9)
 
     page_number = request.GET.get('page')
