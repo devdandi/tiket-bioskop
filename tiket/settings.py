@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-&%l0@v*h5rov-9%qm91_u2v4f9ldmdb6qf*5u8qjga_btrpv!=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'products',
     'sheets',
     'transactions',
-    'django.contrib.humanize'
+    'django.contrib.humanize',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -119,7 +120,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -140,3 +141,5 @@ COMPRESS_ENABLED = True
 STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
 
 MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8080','https://943f-114-142-172-42.ngrok-free.app']

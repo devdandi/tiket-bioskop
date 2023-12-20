@@ -9,21 +9,42 @@
 
 <div class="bg-gray-100 h-screen">
     <div class="bg-white p-6  md:mx-auto">
-      <svg viewBox="0 0 24 24" class="text-green-600 w-16 h-16 mx-auto my-6">
-          <path fill="currentColor"
-              d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z">
-          </path>
-      </svg>
+        <svg class="text-green-600 w-16 h-16 mx-auto my-6" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 50 50"
+style="fill:#FD7E14;">
+<path d="M 25 2 C 12.309295 2 2 12.309295 2 25 C 2 37.690705 12.309295 48 25 48 C 37.690705 48 48 37.690705 48 25 C 48 12.309295 37.690705 2 25 2 z M 25 4 C 36.609824 4 46 13.390176 46 25 C 46 36.609824 36.609824 46 25 46 C 13.390176 46 4 36.609824 4 25 C 4 13.390176 13.390176 4 25 4 z M 24.984375 6.9863281 A 1.0001 1.0001 0 0 0 24 8 L 24 22.173828 A 3 3 0 0 0 22 25 A 3 3 0 0 0 22.294922 26.291016 L 16.292969 32.292969 A 1.0001 1.0001 0 1 0 17.707031 33.707031 L 23.708984 27.705078 A 3 3 0 0 0 25 28 A 3 3 0 0 0 28 25 A 3 3 0 0 0 26 22.175781 L 26 8 A 1.0001 1.0001 0 0 0 24.984375 6.9863281 z"></path>
+</svg>
       <div class="text-center">
-          <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">Payment Done!</h3>
-          <p class="text-gray-600 my-2">Thank you for completing your secure online payment.</p>
+          <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">Payment Pending!</h3>
+          <p class="text-gray-600 my-2">Please complete your payment with click button below.</p>
           <p> Have a great day!  </p>
           <div class="py-10 text-center">
-              <a href="{% url 'home' %}" class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3">
-                  GO BACK 
-             </a>
+              <button id="pay-button" class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3">
+                  PAY NOW
+             </button>
           </div>
       </div>
   </div>
 </div>
+
+<script type="text/javascript">
+    const urlParams = new URLSearchParams(window.location.search);
+const snapToken = urlParams.get('snapToken');
+    var payButton = document.getElementById('pay-button');
+    payButton.addEventListener('click', function () {
+      snap.pay(snapToken, {
+        onSuccess: function(result){
+            window.location.href = `/api/v1/payments/finish/handling?transaction_id=${result['order_id']}`
+        },
+        onPending: function(result){
+
+        },
+        onError: function(result){
+
+        },
+        onClose: function(){
+            window.location.href = "/api/v1/payments/unfinish/handling"
+        }
+      });
+    });
+  </script>
 {% endblock content %}

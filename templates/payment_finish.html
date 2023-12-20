@@ -1,0 +1,186 @@
+<!-- templates/index.html -->
+
+{% extends "_base.html" %}
+
+{% block content %}
+{% load humanize %}
+
+
+    {% csrf_token %}
+    <div class="grid sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32">
+        <div class="px-4 pt-8">
+            <p class="text-xl font-medium">Order Summary</p>
+            <p class="text-gray-400">OrderID: #{{transaction_id}}.</p>
+            <div class="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
+                {% for transaction in transactions %}
+                <div class="flex flex-col rounded-lg bg-white sm:flex-row">
+                    <img class="m-2 h-24 w-28 rounded-md border object-cover object-center"
+                        src="{{ transaction.product_schedule.product.photo.url }}" alt="" />
+                    <div class="flex w-full flex-col px-4 py-4">
+                        <span class="font-semibold">{{ transaction.product_schedule.product.categoryId.name}} - {{ transaction.product_schedule.product.name }}</span>
+                        <p class="mt-auto text-lg font-bold">Rp. {{ transaction.product_schedule.product.price|intcomma }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Modal toggle -->
+                    <div class="bg-gray-200 rounded-md p-3">
+                        #Seat {{ transaction.sheet.number}}
+                    </div>
+                    <div class="bg-gray-200 rounded-md p-3">
+                        Schedule {{ transaction.product_schedule.schedule}}
+                    </div>
+
+                    <div>
+
+                        <!-- Modal toggle -->
+                        <button data-modal-target="static-modal-{{transaction.id}}" data-modal-toggle="static-modal-{{transaction.id}}" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+                            Open ticket
+                        </button>
+                    </div>
+
+
+                </div>
+
+
+
+
+<!-- Main modal -->
+<div id="static-modal-{{transaction.id}}" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Ticket for {{ transaction.product_schedule.product.name }}
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="static-modal-{{transaction.id}}">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-4 md:p-5 space-y-4">
+                <div class="px-4 py-2 text-gray-800">
+                    <div class="hidden xl:flex flex-row justify-between shadow-md border rounded-md">
+                      <div
+                        class="flex flex-col items-center justify-between w-1/4 px-4 py-2 bg-white border-r-2 border-gray-500 border-dashed rounded-l-md"
+                      >
+                        <div class="flex-col">
+                          <img
+                            src="https://store-images.s-microsoft.com/image/apps.33967.13510798887182917.246b0a3d-c3cc-46fc-9cea-021069d15c09.392bf5f5-ade4-4b36-aa63-bb15d5c3817a"
+                          />
+                          <p class="my-2 text-xs italic font-light text-gray-500">
+                            Scan here to check in!
+                          </p>
+                          <div class="text-xs mb-2 text-gray-600">
+                            <span class="text-gray-500">Invalid after :</span>
+                            <br />
+                            {{  transaction.product_schedule.schedule }}
+                          </div>
+                          <div class="text-xs mb-2 text-gray-600">
+                            <span class="text-gray-500">Seat number :</span>
+                            <br />
+                            #{{  transaction.sheet.number }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="relative flex flex-col w-3/4">
+                        <img
+                          src="{{ transaction.product_schedule.product.photo.url }}"
+                        />
+                        <div class="absolute p-1 bottom-24">
+                          <div
+                            class="flex flex-row px-4 py-2 text-xs font-bold text-red-800 bg-white rounded-md "
+                          >
+                            <span class="mr-2 font-normal text-gray-500">Ticket for :</span>
+                            <p class="font-bold text-red-800">{{ transaction.product_schedule.product.name }}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+            <!-- Modal footer -->
+            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button data-modal-hide="static-modal-{{transaction.id}}" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I accept</button>
+                <button data-modal-hide="static-modal-{{transaction.id}}" type="button" class="ms-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Decline</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+                {% endfor %}
+
+            </div>
+
+            <p class="mt-8 text-lg font-medium">Shipping Methods</p>
+            <form class="mt-5 grid gap-6">
+                <div class="relative">
+                    <input class="peer hidden" id="radio_2" type="radio" name="radio" checked />
+                    <span
+                        class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
+                    <label
+                        class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4"
+                        for="radio_2">
+                        <img class="w-14 object-contain" src="/images/oG8xsl3xsOkwkMsrLGKM4.png" alt="" />
+                        <div class="ml-5">
+                            <span class="mt-2 font-semibold">Email Delivery</span>
+                            <p class="text-slate-500 text-sm leading-6">Delivery: 2 minutes</p>
+                        </div>
+                    </label>
+                </div>
+            </form>
+        </div>
+        <div class="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
+            <p class="text-xl font-medium">Customer Details</p>
+            <p class="text-gray-400">Complete your order by providing your payment details.</p>
+            <div class="">
+                <label for="card-holder" class="mt-4 mb-2 block text-sm font-medium">Customer name</label>
+                <div class="relative">
+                    <input type="text" id="card-holder" name="name" value="{{ user.first_name }} {{ user.last_name }}"
+                        class="w-full rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="Your full name here" />
+                    <div class="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Total -->
+                <div class="mt-6 border-t border-b py-2">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-medium text-gray-900">Subtotal</p>
+
+                        <p class="font-semibold text-gray-900">Rp. {{ transactions_summarize.subtotal|intcomma }}</p>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-medium text-gray-900">Shipping</p>
+                        <p class="font-semibold text-gray-900">Rp.0</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex items-center justify-between">
+                    <p class="text-sm font-medium text-gray-900">Total</p>
+                    <p class="text-2xl font-semibold text-gray-900">Rp. {{ transactions_summarize.total|intcomma }}</p>
+                </div>
+                <div class="mt-6 flex items-center justify-between">
+                    <p class="text-sm font-medium text-gray-900">Payment</p>
+                    <p class="text-sm font-semibold text-gray-900">{{ transactions_summarize.payment_type }}</p>
+                </div>
+                <div class="mt-6 flex items-center justify-between">
+                    <p class="text-sm font-medium text-gray-900">Payment Status</p>
+                    {% if transactions_summarize.transaction_status == 'capture' or  transactions_summarize.transaction_status == 'settlement' %}
+                        <p class="text-sm font-semibold text-green-900">Success</p>
+                    {% endif %}
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

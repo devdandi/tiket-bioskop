@@ -24,3 +24,14 @@ class Films(models.Model):
     def __str__(self) -> str:
         return f"{self.categoryId.name} - {self.name}"
 
+
+
+class FilmSchedules(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    product = models.ForeignKey(Films, on_delete=models.CASCADE)
+    schedule = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return f"{self.product.name} at {self.schedule}"

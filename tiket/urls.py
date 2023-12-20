@@ -33,7 +33,7 @@ urlpatterns = [
     path('carts/remove/<str:cart_id>', transaction_views.remove_carts, name='carts.remove'),
 
     path('checkout/', transaction_views.checkout, name='checkout'),
-    path('payments/success', transaction_views.payments, name='payments'),
+    path('payments/<uuid:transaction_id>/<str:snap_token>', transaction_views.payments, name='payments'),
     path('transactions/histories', transaction_views.histories, name='histories'),
 
 
@@ -43,6 +43,19 @@ urlpatterns = [
     path('users/logout/', welcome_views.logout_user, name='user.logout'),
     path('users/signin/', welcome_views.login_user, name='user.signin'),
     path('users/register/', welcome_views.register_user, name='user.register'),
+
+
+    path('api/v1/payments/handling', transaction_views.handling_payments, name='api.v1.payments.handling'),
+    path('api/v1/payments/recurring/handling', transaction_views.handling_recurring, name='api.v1.recurring.handling'),
+    path('api/v1/payments/pay-accounts/handling', transaction_views.handling_pay_accounts, name='api.v1.pay_accounts.handling'),
+    path('api/v1/payments/finish/handling', transaction_views.handling_finish_redirect, name='api.v1.finish.handling'),
+    path('api/v1/payments/unfinish/handling', transaction_views.handling_unfinish_redirect, name='api.v1.unfinish.handling'),
+    path('api/v1/payments/error/handling', transaction_views.handling_error_redirect, name='api.v1.error.handling'),
+
+
+
+
+
 
 
 
